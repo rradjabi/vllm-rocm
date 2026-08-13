@@ -34,19 +34,11 @@ on:
 
   pull_request:
     types: [opened, synchronize, reopened]
-
-  schedule:
-    # Daily: poll for a new nightly. The detect-nightly job dedups against the
-    # qualification feed, so days with no new wheel cost only the cheap poll.
-    - cron: '0 15 * * *'
-    # Daily omni auto-build (gfx1151 only). Distinguished from the plain nightly
-    # by github.event.schedule below; builds vLLM-Omni on the pinned base,
-    # qualifies it (tier2_omni), and publishes the vllm-omni* release on green.
-    # Offset 90 min so it queues behind the plain nightly on the shared
-    # single-GPU dev_lab runner. Deduped by the detect-omni step against the
-    # qualification feed (omni candidate tag), so an unchanged omni version costs
-    # only the cheap poll — no daily rebuild/requalify/republish of the same tag.
-    - cron: '30 16 * * *'
+  # FORK-ONLY. The two upstream crons are removed here on purpose: this is a
+  # runner experiment, and a scheduled full nightly build firing unattended
+  # against the DevLab Halo is not something anyone asked for. Scheduled
+  # workflows run from the default branch only, so deleting them here is
+  # sufficient. Dispatch is the only way this fork builds.
 
 env:
   # Omni auto-build cron targets gfx1151 only (the qualified, hardware-validated
